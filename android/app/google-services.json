@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "794534839382",
+    "project_id": "chill-player-359704",
+    "storage_bucket": "chill-player-359704.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:794534839382:android:bbe47cd0b73dda4a7a67f7",
+        "android_client_info": {
+          "package_name": "com.chilltime.chill.chill"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "794534839382-kvcl08grnsdt9blco0d4bf70182r5vm9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDE-f1mp0KWRbid3Y3YmmY7BpQ8yxd1rJM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "794534839382-kvcl08grnsdt9blco0d4bf70182r5vm9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "794534839382-9454k1800lkujk5mgrh4jfj0ks0vt4h4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.chilltime.chill.chill"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
