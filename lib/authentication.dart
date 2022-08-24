@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:googleapis/drive/v3.dart' as drive;
-final GoogleSignIn googleSignIn = GoogleSignIn(scopes: [drive.DriveApi.driveScope]);
+
+final GoogleSignIn googleSignIn =
+    GoogleSignIn(scopes: [drive.DriveApi.driveScope]);
 
 class Authentication {
   static SnackBar customSnackBar({required String content}) {
@@ -50,20 +52,19 @@ class Authentication {
 
       try {
         final UserCredential userCredential =
-        await auth.signInWithPopup(authProvider);
+            await auth.signInWithPopup(authProvider);
 
         user = userCredential.user;
       } catch (e) {
         print(e);
       }
     } else {
-
       final GoogleSignInAccount? googleSignInAccount =
-      await googleSignIn.signIn();
+          await googleSignIn.signIn();
 
       if (googleSignInAccount != null) {
         final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
+            await googleSignInAccount.authentication;
 
         final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication.accessToken,
@@ -72,7 +73,7 @@ class Authentication {
 
         try {
           final UserCredential userCredential =
-          await auth.signInWithCredential(credential);
+              await auth.signInWithCredential(credential);
 
           user = userCredential.user;
         } on FirebaseAuthException catch (e) {
@@ -80,14 +81,14 @@ class Authentication {
             ScaffoldMessenger.of(context).showSnackBar(
               Authentication.customSnackBar(
                 content:
-                'The account already exists with a different credential',
+                    'The account already exists with a different credential',
               ),
             );
           } else if (e.code == 'invalid-credential') {
             ScaffoldMessenger.of(context).showSnackBar(
               Authentication.customSnackBar(
                 content:
-                'Error occurred while accessing credentials. Try again.',
+                    'Error occurred while accessing credentials. Try again.',
               ),
             );
           }
@@ -125,12 +126,40 @@ class Authentication {
     List<String> driveFileList = [];
     var client = GoogleAuthClient(await googleSignIn.currentUser!.authHeaders);
     var drive2 = drive.DriveApi(client);
-    drive2.files.list().then((value) {
+
+    //From Shared Drive
+    drive2.drives.list().then(
+          (value)  {
+              for (var i = 0; i < value.drives!.length; i++) {
+                driveFileList
+                    .add("Share Drive - ${value.drives![i].id}");
+                print("${value.drives![i].id}");
+              }
+          },
+        );
+
+
+
+    //From My Drive
+    drive2.files
+        .list(
+         //q: "'root' in parents and trashed=false and (mimeType = 'video/mp4' or mimeType = 'application/vnd.google-apps.folder')",
+        q: "'0AKBim_WgextGUk9PVA' in parents and trashed=false and (mimeType = 'video/mp4' or mimeType = 'application/vnd.google-apps.folder')",
+        supportsAllDrives: true,
+        supportsTeamDrives: false,
+        includeItemsFromAllDrives: true,
+        orderBy: 'name',
+         pageSize: 1000
+    )
+        .then((value) {
       drive.FileList list = value;
       for (var i = 0; i < list.files!.length; i++) {
-        driveFileList.add("Id: ${list.files![i].id} File Name:${list.files![i].name}");
+        print(list.files![i].id);
+        driveFileList
+            .add("My - ${list.files![i].name} ${list.files![i].id}");
       }
     });
+    print("AA 1");
     return Future.value(driveFileList);
   }
 }

@@ -23,6 +23,7 @@ class UserInfoScreen extends StatefulWidget {
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
   late User _user;
+  late List<String>? fileList;
   bool _isSigningOut = false;
 
   Route _routeToSignInScreen() {
@@ -47,7 +48,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   @override
   void initState() {
     _user = widget._user;
-
+    fileList = widget._fileList;
     super.initState();
   }
 
@@ -114,15 +115,15 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               ),
               SizedBox(height: 24.0),
               SizedBox(
-                height: 200,
+                height: 400,
                 child: ListView.builder(
                   itemBuilder: (context, i) {
                     return ListTile(
-                      title: Text(widget._fileList![i],
+                      title: Text(fileList![i],
                           style: TextStyle(color: Colors.white)),
                     );
                   },
-                  itemCount: widget._fileList!.length,
+                  itemCount: fileList!.length,
                 ),
               ),
               SizedBox(height: 16.0),
@@ -169,7 +170,19 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         ),
                         ElevatedButton(
                           onPressed: () async {
-                            setState(() {});
+                            List<String> aa =
+                                await Authentication.listGoogleDriveFiles();
+                            Future.delayed(Duration(seconds: 5))
+                                .then((value) => setState(() {
+                                      fileList = aa;
+                                      print("AA");
+                                    }));
+                            // .then((value) => {
+                            //   print("AA"),
+                            //       setState(() {
+                            //         fileList = value;
+                            //       }),
+                            //     });
                           },
                           child: Padding(
                             padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
